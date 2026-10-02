@@ -3,171 +3,166 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SIGHutan – Sistem Informasi Geospasial Hutan Rakyat</title>
+<title>WebGIS 4F – Farmers for Forest Protection Foundation</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
 <style>
-:root{--ink:#111;--acc:#111;--g1:#f5f5f5;--g2:#e4e4e4;--g3:#c9c9c9;--g4:#767676;--r:6px}
+:root{--dk:#0d4a36;--pr:#1b8a5a;--pr2:#e6f3ec;--gold:#f0a81f;--bg:#f0f5f2;--ink:#15251d;--mut:#66756d;--ln:#dde6e0;--r:8px}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{font:13px/1.45 "Segoe UI",system-ui,Arial,sans-serif;color:var(--ink);background:#fff;display:flex;flex-direction:column;overflow:hidden}
+body{font:13px/1.45 system-ui,"Segoe UI",Arial,sans-serif;color:var(--ink);background:#fff;display:flex;flex-direction:column;overflow:hidden}
 button,select,input{font:inherit;color:inherit}
-button{cursor:pointer;background:#fff;border:1px solid var(--g3);padding:7px 12px;border-radius:var(--r)}
-button:hover{background:var(--g1)}
-:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
-.solid{background:var(--acc);color:#fff;border-color:var(--acc)}
-.solid:hover{background:#333}
-.x{border:0;background:none;font-size:18px;padding:0 4px;line-height:1}
-/* header */
-header{height:56px;flex:none;display:flex;align-items:center;gap:18px;padding:0 16px;border-bottom:1px solid var(--g3);background:#fff;z-index:1300}
+button,select{cursor:pointer;background:#fff;border:1px solid var(--ln);padding:7px 12px;border-radius:var(--r)}
+button:hover{background:var(--pr2)}
+:focus-visible{outline:2px solid var(--pr);outline-offset:1px}
+.solid{background:var(--pr);color:#fff;border-color:var(--pr)}
+.solid:hover{background:var(--dk)}
+.x{border:0;background:none;font-size:18px;padding:0 4px;line-height:1;display:none}
+header{height:58px;flex:none;display:flex;align-items:center;gap:18px;padding:0 16px;background:#fff;border-top:3px solid var(--pr);border-bottom:1px solid var(--ln);z-index:1300}
 .burger{display:none}
 .brand{display:flex;align-items:center;gap:10px}
-.logo{width:34px;height:34px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:700;font-size:12px}
-.brand b{display:block;font-size:15px;line-height:1.15}
-.brand small{font-size:11px;color:var(--g4)}
+.logo{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--pr),var(--dk));color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px}
+.brand b{display:block;font-size:16px;line-height:1.15;color:var(--dk)}
+.brand small{font-size:10.5px;color:var(--mut)}
 nav{display:flex;gap:2px}
-nav a{padding:7px 12px;border-radius:var(--r);color:var(--ink);text-decoration:none}
-nav a:hover{background:var(--g1)}
-nav a.on{background:var(--ink);color:#fff}
+nav a{padding:7px 12px;border-radius:var(--r);color:var(--ink);text-decoration:none;font-weight:500}
+nav a:hover{background:var(--pr2)}
+nav a.on{background:var(--pr);color:#fff}
 .sp{flex:1}
-.hs{width:240px;padding:8px 12px;border:1px solid var(--g3);border-radius:var(--r)}
-.bell{position:relative;padding:6px 10px}
-.bell i{position:absolute;top:-4px;right:-2px;background:var(--ink);color:#fff;border-radius:50%;min-width:16px;height:16px;font:700 10px/16px sans-serif;text-align:center}
+.hs{width:240px;padding:8px 12px;border:1px solid var(--ln);border-radius:var(--r);background:var(--bg)}
+.bell{position:relative}
+.bell i{position:absolute;top:-6px;right:-6px;background:var(--gold);color:#111;border-radius:50%;min-width:17px;height:17px;font:700 10px/17px sans-serif;text-align:center}
 .user{display:flex;align-items:center;gap:8px;white-space:nowrap}
-.av{width:30px;height:30px;border-radius:50%;background:var(--g4)}
-/* layout */
-.app{flex:1;min-height:0;display:grid;grid-template-columns:250px 1fr 330px}
-.side{border-right:1px solid var(--g3);overflow:auto;padding:14px;background:#fff}
-.detail{border-left:1px solid var(--g3);overflow:auto;padding:14px;background:#fff}
-h2{font-size:16px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
-.seg{display:flex;border:1px solid var(--ink);border-radius:var(--r);overflow:hidden;margin-bottom:10px}
+.av{width:30px;height:30px;border-radius:50%;background:var(--dk)}
+.app{flex:1;min-height:0;display:grid;grid-template-columns:260px 1fr 330px}
+.side,.detail{overflow:auto;padding:14px;background:#fff}
+.side{border-right:1px solid var(--ln)}
+.detail{border-left:1px solid var(--ln)}
+h2{font-size:16px;color:var(--dk);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.seg{display:flex;border:1px solid var(--pr);border-radius:var(--r);overflow:hidden;margin-bottom:10px}
 .seg button{flex:1;border:0;border-radius:0}
-.seg button.on,.tabs button.on{background:var(--ink);color:#fff}
-details{border-bottom:1px solid var(--g2);padding:8px 0}
-summary{cursor:pointer;font-weight:600;font-size:13.5px;list-style:none;display:flex;justify-content:space-between}
-summary::after{content:"+";color:var(--g4)}
+.seg button.on,.tabs button.on{background:var(--pr);color:#fff}
+details{border-bottom:1px solid var(--ln);padding:8px 0}
+summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--dk);list-style:none;display:flex;justify-content:space-between}
+summary::after{content:"+";color:var(--mut)}
 details[open]>summary::after{content:"–"}
 .row{display:flex;align-items:center;gap:8px;padding:5px 0 0 2px}
 .row label{display:flex;align-items:center;gap:8px;cursor:pointer;flex:1}
-input[type=checkbox]{accent-color:#111;width:15px;height:15px;flex:none}
-.sw{width:15px;height:11px;border:1px solid var(--ink);flex:none}
-.op{display:flex;gap:8px;align-items:center;margin-top:8px;font-size:12px;color:var(--g4)}
-.op input{flex:1;accent-color:#111}
-.note{color:var(--g4);font-size:12px;padding-top:6px}
+.row em{font-style:normal;color:var(--mut);font-size:11px}
+input[type=checkbox]{accent-color:var(--pr);width:15px;height:15px;flex:none}
+.sw{width:15px;height:11px;border-radius:2px;flex:none;border:1px solid #0003}
+.op{display:flex;gap:8px;align-items:center;margin-top:8px;font-size:12px;color:var(--mut)}
+.op input{flex:1;accent-color:var(--pr)}
+.note{color:var(--mut);font-size:12px;padding-top:8px}
 .pane{display:none}.pane.on{display:block}
-/* center */
-.center{overflow:auto;background:var(--g1);min-width:0}
-.mapbox{position:relative;height:clamp(340px,56vh,580px);background:#d9d9d9}
+.center{overflow:auto;background:var(--bg);min-width:0}
+.mapbox{position:relative;height:clamp(340px,56vh,580px);background:#dfe8e2}
 #map{position:absolute;inset:0}
-.leaflet-tile-pane{filter:grayscale(1) contrast(1.05)}
-.leaflet-container{font:inherit}
+.leaflet-container{font:inherit;background:#dfe8e2}
 .leaflet-top.leaflet-left{margin-top:54px}
-.msearch{position:absolute;z-index:1000;top:12px;left:12px;width:260px;max-width:calc(100% - 24px)}
-.msearch input{width:100%;padding:9px 12px;border:1px solid var(--g3);border-radius:var(--r);background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.res{background:#fff;border:1px solid var(--ink);border-top:0;display:none;max-height:190px;overflow:auto}
-.res div{padding:7px 10px;border-bottom:1px solid var(--g2);cursor:pointer}
-.res div:hover{background:var(--g1)}
+.msearch{position:absolute;z-index:1000;top:12px;left:12px;width:270px;max-width:calc(100% - 24px)}
+.msearch input{width:100%;padding:9px 12px;border:1px solid var(--ln);border-radius:var(--r);background:#fff;box-shadow:0 1px 4px #0003}
+.res{background:#fff;border:1px solid var(--pr);border-top:0;display:none;max-height:200px;overflow:auto}
+.res div{padding:7px 10px;border-bottom:1px solid var(--ln);cursor:pointer;display:flex;justify-content:space-between;gap:8px}
+.res div:hover{background:var(--pr2)}
+.res small{color:var(--mut)}
 .tools{position:absolute;z-index:1000;top:12px;right:12px;display:flex;gap:6px}
-.tools>*{background:#fff;border:1px solid var(--g3);border-radius:var(--r);padding:8px 11px;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.tools .on{background:var(--ink);color:#fff}
-.cbar{position:absolute;z-index:1000;left:12px;bottom:10px;background:rgba(255,255,255,.92);border:1px solid var(--g3);border-radius:4px;padding:3px 8px;font-size:11.5px}
+.tools>*{box-shadow:0 1px 4px #0003}
+.tools .on{background:var(--pr);color:#fff}
+.cbar{position:absolute;z-index:1000;left:12px;bottom:10px;background:#ffffffee;border:1px solid var(--ln);border-radius:4px;padding:3px 8px;font-size:11.5px}
 .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:12px 12px 0}
-.card{background:#fff;border:1px solid var(--g3);border-radius:var(--r);padding:12px;min-width:0}
+.card{background:#fff;border:1px solid var(--ln);border-radius:12px;padding:14px;min-width:0}
 .stat{display:flex;gap:10px;align-items:center}
-.ic{width:40px;height:40px;border-radius:var(--r);background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
-.stat small{display:block;color:var(--g4);font-size:11.5px}
-.stat b{font-size:20px;font-weight:600}
-.charts{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:10px;padding:12px}
-.charts h3{font-size:14px;margin-bottom:10px}
+.ic{width:42px;height:42px;border-radius:10px;color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+.stat small{display:block;color:var(--mut);font-size:11.5px;line-height:1.25}
+.stat b{font-size:20px;color:var(--dk)}
+.stat b em{font:500 12px system-ui;color:var(--mut)}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px}
+.charts h3{font-size:14.5px;color:var(--dk)}
+.sub{font-size:11.5px;color:var(--mut);margin:2px 0 12px}
+.yr{display:grid;grid-template-columns:40px 1fr;gap:10px;align-items:center;margin-bottom:9px;font-weight:700;color:var(--dk)}
+.trk{background:#eef2ef;border-radius:99px;height:26px;overflow:hidden}
+.fil{height:100%;border-radius:99px;display:flex;align-items:center;justify-content:flex-end;padding:0 10px;color:#fff;font-size:11.5px;font-weight:600;white-space:nowrap}
 .dw{display:flex;gap:14px;align-items:center}
 .donut{width:116px;height:116px;border-radius:50%;flex:none;-webkit-mask:radial-gradient(circle 34px,transparent 98%,#000 100%);mask:radial-gradient(circle 34px,transparent 98%,#000 100%)}
 .leg{flex:1;font-size:11.5px;min-width:0}
 .leg p{display:flex;align-items:center;gap:6px;margin-bottom:5px}
-.leg i{width:10px;height:10px;flex:none}
-.leg span{margin-left:auto;color:var(--g4);white-space:nowrap;padding-left:6px}
-.vb{display:flex;align-items:flex-end;gap:12px;height:140px;border-bottom:1px solid var(--g3)}
-.vb div{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;text-align:center;font-size:11.5px}
-.vb i{display:block;margin-top:4px}
-.vl{display:flex;gap:12px;margin-top:5px;font-size:10.5px;text-align:center;color:var(--g4)}
+.leg i{width:10px;height:10px;flex:none;border-radius:2px}
+.leg span{margin-left:auto;color:var(--mut);white-space:nowrap;padding-left:6px}
+.vb{display:flex;align-items:flex-end;gap:12px;height:140px;border-bottom:1px solid var(--ln)}
+.vb div{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;text-align:center;font-size:11.5px;font-weight:600}
+.vb i{display:block;margin-top:4px;border-radius:4px 4px 0 0}
+.vl{display:flex;gap:12px;margin-top:5px;font-size:10.5px;text-align:center;color:var(--mut)}
 .vl span{flex:1}
 .hb{display:grid;grid-template-columns:44px 1fr 52px;gap:8px;align-items:center;margin-bottom:8px;font-size:12px}
-.hb i{display:block;height:12px;background:var(--ink)}
-.hb span:last-child{color:var(--g4);text-align:right}
-/* detail */
+.hb i{display:block;height:12px;border-radius:3px}
+.hb span:last-child{color:var(--mut);text-align:right}
 .tabs{display:flex;gap:4px;margin:10px 0}
 .tabs button{flex:1;padding:6px 2px;font-size:12px}
-.hero,.ph i{display:block;background:linear-gradient(135deg,#cfcfcf,#6e6e6e)}
-.hero{height:140px;border-radius:var(--r);margin-bottom:8px;color:#fff;display:grid;place-items:center;font-size:12px}
+.hero{height:140px;border-radius:10px;margin-bottom:8px;color:#fff;display:grid;place-items:center;font-size:12px;background:linear-gradient(135deg,#7fbf6a,#0d4a36)}
 .dt{width:100%;border-collapse:collapse;margin-bottom:12px}
-.dt td{padding:5px 0;vertical-align:top;font-size:12.5px;border-bottom:1px solid var(--g2)}
-.dt td:first-child{color:var(--g4);width:42%;padding-right:8px}
+.dt td{padding:5px 0;vertical-align:top;font-size:12.5px;border-bottom:1px solid var(--ln)}
+.dt td:first-child{color:var(--mut);width:42%;padding-right:8px}
 .btns{display:flex;gap:8px}
 .btns button{flex:1}
-.phh{display:flex;justify-content:space-between;margin:16px 0 8px;font-weight:600;font-size:14px}
-.phh a{font-weight:400;font-size:12px;color:var(--ink)}
+.phh{display:flex;justify-content:space-between;margin:16px 0 8px;font-weight:600;font-size:14px;color:var(--dk)}
+.phh a{font-weight:400;font-size:12px;color:var(--pr)}
 .ph{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .ph div{font-size:10.5px}
-.ph i{aspect-ratio:1;border-radius:4px;margin-bottom:3px}
-/* tablet & mobile */
-@media(max-width:1180px){.app{grid-template-columns:230px 1fr}.detail{position:fixed;right:0;top:56px;bottom:0;width:330px;transform:translateX(100%);transition:transform .2s;z-index:1200;box-shadow:-2px 0 8px rgba(0,0,0,.2)}.detail.open{transform:none}.stats{grid-template-columns:repeat(3,1fr)}.charts{grid-template-columns:1fr 1fr}.charts .card:first-child{grid-column:1/-1}}
+.ph i{display:block;aspect-ratio:1;border-radius:8px;margin-bottom:3px;background:linear-gradient(135deg,#7fbf6a,#1b6b48)}
+.ph div:nth-child(2) i{background:linear-gradient(135deg,#f0a81f,#a86a0a)}
+.ph div:nth-child(3) i{background:linear-gradient(135deg,#ef7d33,#a93e18)}
+.ph div:nth-child(4) i{background:linear-gradient(135deg,#6fa8f0,#1f4fa8)}
+.ph div:nth-child(5) i{background:linear-gradient(135deg,#c8dc6e,#5d8a1f)}
+.ph div:nth-child(6) i{background:linear-gradient(135deg,#a58ce8,#5a3fb0)}
+.doc{list-style:none}
+.doc li{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--ln)}
+.doc li span{flex:1}
+.doc small{color:var(--mut)}
+.ext{background:var(--pr2);color:var(--dk);border-radius:4px;padding:1px 6px;font-size:10px}
+@media(max-width:1180px){.app{grid-template-columns:240px 1fr}.detail{position:fixed;right:0;top:58px;bottom:0;width:330px;transform:translateX(100%);transition:transform .2s;z-index:1200;box-shadow:-2px 0 10px #0003}.detail.open{transform:none}.detail .x{display:block}.stats{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:900px){
-  html,body{height:auto}body{overflow:auto}
-  header{position:sticky;top:0;gap:10px;padding:0 12px}
-  .burger{display:block}nav,.hs,.user span{display:none}.brand small{display:none}
-  .app{display:block}
-  .side{position:fixed;left:0;top:56px;bottom:0;width:285px;transform:translateX(-100%);transition:transform .2s;z-index:1250;box-shadow:2px 0 8px rgba(0,0,0,.25)}
-  .side.open{transform:none}
-  .detail{top:auto;left:0;right:0;width:auto;max-height:68vh;border-top:2px solid var(--ink);border-left:0;transform:translateY(100%);box-shadow:0 -2px 10px rgba(0,0,0,.25)}
-  .center{overflow:visible}
-  .mapbox{height:58vh;min-height:320px}
-  .tools .hide-m{display:none}
-  .stats{grid-template-columns:1fr 1fr;padding:10px 10px 0}
-  .charts{grid-template-columns:1fr;padding:10px}
-  .dw{flex-direction:column;align-items:flex-start}
-  .leg{width:100%}
+ html,body{height:auto}body{overflow:auto}
+ header{position:sticky;top:0;gap:10px;padding:0 12px}
+ .burger{display:block}nav,.hs,.user span,.brand small{display:none}
+ .app{display:block}
+ .side{position:fixed;left:0;top:58px;bottom:0;width:290px;transform:translateX(-100%);transition:transform .2s;z-index:1250;box-shadow:2px 0 10px #0004}
+ .side.open{transform:none}.side .x{display:block}
+ .detail{top:auto;left:0;right:0;width:auto;max-height:68vh;border-top:3px solid var(--pr);border-left:0;transform:translateY(100%);box-shadow:0 -2px 10px #0004}
+ .center{overflow:visible}
+ .mapbox{height:58vh;min-height:320px}
+ .hide-m{display:none}
+ .stats{grid-template-columns:1fr 1fr;padding:10px 10px 0}
+ .charts{grid-template-columns:1fr;padding:10px}
+ .dw{flex-direction:column;align-items:flex-start}.leg{width:100%}
 }
 </style>
 </head>
 <body>
 <header>
   <button class="burger" id="bBurger" aria-label="Buka layer">☰</button>
-  <div class="brand"><div class="logo">SIG</div><div><b>SIGHutan</b><small>Sistem Informasi Geospasial Hutan Rakyat</small></div></div>
+  <div class="brand"><div class="logo">4F</div><div><b>WebGIS 4F</b><small>Farmers for Forest Protection Foundation</small></div></div>
   <nav><a href="#">Beranda</a><a href="#" class="on">Peta</a><a href="#">Data</a><a href="#">Monitoring</a><a href="#">Kegiatan</a><a href="#">Laporan</a><a href="#">Tentang</a></nav>
   <div class="sp"></div>
-  <input class="hs" placeholder="Cari desa, lokasi, atau layer..." aria-label="Cari" id="hs">
+  <input class="hs" id="hs" placeholder="Cari desa, lokasi, atau layer..." aria-label="Cari">
   <button class="bell" aria-label="Notifikasi">Notif<i>3</i></button>
-  <div class="user"><div class="av"></div><span>Admin ▾</span></div>
+  <div class="user"><div class="av"></div><span>Admin 4F ▾</span></div>
 </header>
 
 <div class="app">
   <aside class="side" id="side">
     <h2>Layer Peta <button class="x" id="sideX" aria-label="Tutup">✕</button></h2>
     <div class="seg" id="seg"><button class="on" data-p="sp">Data Spasial</button><button data-p="lp">Data Lapangan</button></div>
-
-    <div class="pane on" id="sp">
-      <details open><summary>Administrasi</summary>
-        <div class="row"><label><input type="checkbox" data-l="desa" checked><span class="sw" style="border-style:dashed"></span>Batas Desa</label></div></details>
-      <details open><summary>HCS</summary>
-        <div class="row"><label><input type="checkbox" data-l="hcs" checked>Tampilkan kelas</label></div>
-        <div id="kls"></div>
-        <div class="op">Opasitas <input type="range" min="0" max="100" value="75" id="opH"></div></details>
-      <details><summary>Hutan Masyarakat</summary>
-        <div class="row"><label><input type="checkbox" data-l="hm"><span class="sw" style="background:repeating-linear-gradient(45deg,#111 0 2px,#fff 2px 5px)"></span>Area hutan masyarakat</label></div></details>
-      <div id="stub"></div>
-    </div>
-    <div class="pane" id="lp">
-      <details open><summary>Verifikasi lapangan</summary>
-        <div class="row"><label><input type="checkbox" data-l="titik" checked><span class="sw" style="border-radius:50%;background:#111"></span>Titik verifikasi</label></div>
-        <p class="note" id="nT"></p></details>
-    </div>
-    <p class="note">Seluruh data pada peta adalah data contoh.</p>
+    <div class="pane on" id="sp"></div>
+    <div class="pane" id="lp"></div>
+    <p class="note">Nama desa, hutan, batas, dan titik adalah data contoh. Ringkasan jumlah desa, petani, dan luas hutan mengacu pada farmers4forest.org.</p>
   </aside>
 
   <section class="center">
     <div class="mapbox">
       <div id="map"></div>
-      <div class="msearch"><input id="q" placeholder="Cari desa atau titik..." autocomplete="off" aria-label="Cari lokasi"><div class="res" id="res"></div></div>
+      <div class="msearch"><input id="q" placeholder="Cari desa, hutan, atau kode titik..." autocomplete="off" aria-label="Cari lokasi"><div class="res" id="res"></div></div>
       <div class="tools">
-        <select id="bm" aria-label="Peta dasar"><option value="jalan">Peta jalan</option><option value="sat">Citra satelit</option><option value="none">Polos</option></select>
+        <select id="bm" aria-label="Peta dasar"><option value="terang">Peta terang</option><option value="sat">Citra satelit</option><option value="jalan">Peta jalan</option><option value="none">Polos</option></select>
         <button id="bHome" class="hide-m">Awal</button>
         <button id="bMs">Ukur</button>
         <button id="bFs" class="hide-m">Penuh</button>
@@ -176,9 +171,10 @@ input[type=checkbox]{accent-color:#111;width:15px;height:15px;flex:none}
     </div>
     <div class="stats" id="stats"></div>
     <div class="charts">
-      <div class="card"><h3>Tutupan Lahan (Kabupaten Harapan Jaya)</h3><div class="dw"><div class="donut" id="donut"></div><div class="leg" id="dleg"></div></div></div>
-      <div class="card"><h3>Sebaran HCS</h3><div class="vb" id="vb"></div><div class="vl" id="vl"></div></div>
-      <div class="card"><h3>Sebaran NKT</h3><div id="nkt"></div></div>
+      <div class="card"><h3>Implementasi Proyek per Tahun</h3><p class="sub">Jumlah desa yang didukung setiap tahun.</p><div id="yrs"></div></div>
+      <div class="card"><h3>Tutupan Lahan (Wilayah Program)</h3><p class="sub">Persentase terhadap luas wilayah program.</p><div class="dw"><div class="donut" id="donut"></div><div class="leg" id="dleg"></div></div></div>
+      <div class="card"><h3>Sebaran HCS</h3><p class="sub">Persentase luas hutan per kelas kerapatan.</p><div class="vb" id="vb"></div><div class="vl" id="vl"></div></div>
+      <div class="card"><h3>Sebaran NKT</h3><p class="sub">Jumlah titik teridentifikasi per kategori.</p><div id="nkt"></div></div>
     </div>
   </section>
 
@@ -189,104 +185,172 @@ input[type=checkbox]{accent-color:#111;width:15px;height:15px;flex:none}
     <div class="pane on" id="pi"></div>
     <div class="pane" id="pf"><div class="ph" id="phA"></div></div>
     <div class="pane" id="pd"></div>
-    <div class="pane" id="pk"><p class="note">Belum ada dokumen untuk lokasi ini.</p></div>
+    <div class="pane" id="pk"></div>
     <div class="btns"><button class="solid" id="bZ">Lihat di Peta</button><button id="bP">Unduh Laporan</button></div>
-    <div class="phh">Foto Lapangan Terbaru <a href="#">Lihat Semua</a></div>
+    <div class="phh">Foto Lapangan Terbaru <a href="#" id="allPh">Lihat Semua</a></div>
     <div class="ph" id="phB"></div>
   </aside>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script>
-/* ============ DATA CONTOH (ganti dengan data asli) ============ */
-let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
-const KELAS=[{k:'rm',n:'Regenerasi Muda (DN 2)',s:'Regenerasi Muda',c:'#d9d9d9'},{k:'ld',n:'Low Density Forest (DN 3)',s:'Low Density',c:'#a6a6a6'},{k:'md',n:'Medium Density Forest (DN 4)',s:'Medium Density',c:'#6b6b6b'},{k:'hd',n:'High Density Forest (DN 5)',s:'High Density',c:'#1c1c1c'}];
-const DESA=[['Desa Sukamaju','Tanjung Indah',-0.30,110.40],['Desa Mekar Sari','Tanjung Indah',-0.20,110.62],['Desa Karya Bakti','Sungai Raya',-0.38,110.72],['Desa Tanjung Harapan','Sungai Raya',-0.50,110.52],['Desa Bukit Permai','Bukit Makmur',-0.14,110.44],['Desa Sungai Jaya','Bukit Makmur',-0.44,110.31]];
-const HM=['Hutan Adat Rimba Lestari','Hutan Desa Bukit Sejahtera','Hutan Adat Tembawang Raya','Hutan Desa Lembah Hijau','Hutan Adat Rimba Asri','Hutan Desa Sungai Bening'];
-const blob=(la,lo,r,n)=>{const p=[],ph=rnd()*6;for(let i=0;i<n;i++){const a=i/n*6.283,k=r*(.72+rnd()*.5);p.push([la+Math.sin(a+ph)*k,lo+Math.cos(a+ph)*k*1.05])}return p};
-const haOf=p=>{let s=0;for(let i=0;i<p.length;i++){const[a,b]=p[i],[c,d]=p[(i+1)%p.length];s+=b*c-d*a}return Math.abs(s/2)*1236*100};
-const fmt=n=>Math.round(n).toLocaleString('id-ID');
-const desa=DESA.map(([n,kec,la,lo],i)=>{const p=blob(la,lo,.062,14);return{id:i,n,kec,la,lo,p,ha:haOf(p),nt:0}});
-const hcs=[],hm=[],titik=[];
-desa.forEach((d,i)=>{
-  for(let j=0;j<3;j++){const p=blob(d.la+(rnd()-.5)*.05,d.lo+(rnd()-.5)*.05,.026,10);hcs.push({d,k:KELAS[Math.floor(rnd()*4)],p,ha:haOf(p)})}
-  const p=blob(d.la+(rnd()-.5)*.03,d.lo+(rnd()-.5)*.03,.02,9);hm.push({d,nama:HM[i],k:KELAS[1+i%3],p,ha:haOf(p)});
-  for(let j=0;j<5;j++){titik.push({d,id:'T-'+String(titik.length+1).padStart(3,'0'),ll:[d.la+(rnd()-.5)*.09,d.lo+(rnd()-.5)*.09],tgl:(10+j)+' Mei 2026',pt:'Petugas '+(1+j%3)});d.nt++}
-});
+const $=i=>document.getElementById(i);
+/* ========== DATA CONTOH (ganti dengan data asli) ========== */
+let seed=11;
+const rnd=()=>(seed=seed*16807%2147483647)/2147483647,
+R=(a,b)=>a+rnd()*(b-a),pick=a=>a[rnd()*a.length|0],
+fmt=n=>Math.round(n).toLocaleString('id-ID'),pad=(n,w=2)=>String(n).padStart(w,'0'),
+blob=(la,lo,r,n=10)=>{const p=[],f=R(0,6);for(let i=0;i<n;i++){const a=i/n*6.283,k=r*R(.72,1.22);p.push([la+Math.sin(a+f)*k,lo+Math.cos(a+f)*k*1.05])}return p},
+F=(t,r,g,d,v)=>({t,r,g,d,v}),jit=(d,s)=>[d.la+R(-s,s),d.lo+R(-s,s)],
+km=g=>g.reduce((s,p,i)=>i?s+L.latLng(g[i-1]).distanceTo(p):s,0)/1000;
+const KAB='Kabupaten Contoh',TOT_H=6735,TOT_P=4736,WIL=TOT_H/.584;
+/* luas hutan (ha), petani, tahun program → total 13 desa, 6.735 ha, 4.736 petani */
+const DS=[[820,420,2023],[640,380,2023],[410,250,2023],[560,360,2023],[380,300,2023],[470,340,2023],[520,410,2024],[350,280,2024],[610,390,2025],[430,320,2025],[500,350,2025],[560,500,2025],[485,436,2025]];
+const desa=DS.map(([ha,pt,th],i)=>{const la=-.15-(i/4|0)*.14+R(-.015,.015),lo=110.25+i%4*.2+R(-.02,.02);return{i,n:'Contoh Desa '+(i+1),kec:'Kec. Contoh '+'ABCD'[i/4|0],ha,pt,th,la,lo,p:blob(la,lo,.055,14),nt:0}});
 
-/* ============ PETA ============ */
-const map=L.map('map',{zoomControl:false}).setView([-0.32,110.5],10);
+/* titik verifikasi (28 titik, kode TV-001 dst.) */
+const tv=[];
+desa.forEach(d=>{for(let j=0;j<(d.i<2?3:2);j++){d.nt++;tv.push(F('TV-'+pad(tv.length+1,3),0,jit(d,.045),d))}});
+tv.forEach((f,k)=>f.r=[['Kode Titik',f.t],['Desa',f.d.n],['Kecamatan',f.d.kec],['Tanggal',(10+k%9)+' Mei 2026'],['Petugas','Petugas '+(1+k%3)],['Koordinat',f.g[0].toFixed(5)+', '+f.g[1].toFixed(5)],['Catatan','Tutupan hutan terverifikasi']]);
+
+const LY=[],LI={},add=(id,g,n,t,c,fs,o={})=>{const l={id,g,n,t,c,fs,...o};LY.push(l);LI[id]=l};
+const all=desa.flatMap(d=>d.p),LA0=Math.min(...all.map(x=>x[0])),LO0=Math.min(...all.map(x=>x[1])),LO1=Math.max(...all.map(x=>x[1])),
+bb=(pp,s)=>{const a=pp.map(x=>x[0]),b=pp.map(x=>x[1]),A=Math.min(...a)-s,B=Math.min(...b)-s,C=Math.max(...a)+s,D=Math.max(...b)+s;return[[A,B],[A,D],[C,D],[C,B]]};
+
+/* Administrasi */
+add('kab','Administrasi','Batas Kabupaten','poly','#0d4a36',[F(KAB,[['Jumlah kecamatan',4],['Jumlah desa program',desa.length],['Luas wilayah program (ha)',fmt(WIL)]],bb(all,.06))],{back:1,st:{fill:false,interactive:false,weight:3,color:'#0d4a36',dashArray:'2 7'}});
+add('kec','Administrasi','Batas Kecamatan','poly','#1b8a5a',[0,1,2,3].map(k=>{const m=desa.filter(d=>(d.i/4|0)==k);return F('Kec. Contoh '+'ABCD'[k],[['Kabupaten',KAB],['Jumlah desa',m.length],['Luas hutan (ha)',fmt(m.reduce((s,d)=>s+d.ha,0))]],bb(m.flatMap(d=>d.p),.025))}),{back:1,st:{weight:2,color:'#1b8a5a',fillOpacity:.03,dashArray:'10 6'}});
+add('desa','Administrasi','Batas Desa','poly','#f0a81f',desa.map(d=>F(d.n,[['Desa',d.n],['Kecamatan',d.kec],['Kabupaten',KAB],['Tahun program',d.th],['Luas hutan (ha)',fmt(d.ha)],['Petani terlibat',fmt(d.pt)],['Titik verifikasi',d.nt]],d.p,d)),{on:1,st:{color:'#f0a81f',weight:2.5,dashArray:'7 5',fillColor:'#fff',fillOpacity:.03}});
+
+/* HCS */
+const HC=[['rm','Regenerasi Muda (DN 2)','Regenerasi Muda','#c8dc6e',1],['ld','Low Density Forest (DN 3)','Low Density','#7fbf6a',1],['md','Medium Density Forest (DN 4)','Medium Density','#2e9e66',1],['hd','High Density Forest (DN 5)','High Density','#0d5c3a',1],['lt','Lahan Terbuka (DN 0)','Lahan Terbuka','#e6d28f',0],['pk','Perkebunan (DN 10)','Perkebunan','#c98a1b',0],['pm','Permukiman (DN 50)','Permukiman','#d9485a',0]],hf={};
+HC.forEach(c=>hf[c[0]]=[]);
+const hr=(c,d,v)=>F('Area '+c[2],[['Kelas HCS',c[1]],['Desa',d.n],['Kecamatan',d.kec],['Luas (ha)',v.toFixed(2)]],blob(d.la+R(-.025,.025),d.lo+R(-.03,.03),.022),d,v);
+desa.forEach(d=>{const w=[R(.4,1.4),R(.4,1.4),R(.4,1.4)],s=w[0]+w[1]+w[2];
+ w.forEach(x=>{const c=HC[rnd()*4|0];hf[c[0]].push(hr(c,d,d.ha*x/s))});
+ const c=HC[4+(rnd()*3|0)];hf[c[0]].push(hr(c,d,R(40,140)))});
+HC.forEach(c=>add('h_'+c[0],'HCS',c[1],'poly',c[3],hf[c[0]],{on:c[4]}));
+
+/* Hutan Masyarakat */
+const hm=desa.map(d=>{const k=HC[1+d.i%3],v=d.ha*.3,nm='Contoh Hutan '+(d.i+1);return F(nm,[['Nama Lokasi',nm],['Desa',d.n],['Kecamatan',d.kec],['Kabupaten',KAB],['Kategori',d.i%2?'Hutan Adat / Rimba':'Hutan Desa'],['Luas (ha)',v.toFixed(2)],['Status Kawasan',pick(['APL','HPK','HL'])],['Kategori HCS',k[1]],['NKT','NKT 1, 2, 3'],['Jenis Penting','Tengkawang, Durian, Meranti'],['Ancaman',pick(['Pembukaan lahan','Perambahan'])],['Hasil Verifikasi',d.nt+' titik (Mei 2026)'],['Sumber Data','Survei lapangan (contoh)']],blob(d.la+R(-.015,.015),d.lo+R(-.015,.015),.017,9),d,v)});
+add('hm','Hutan Masyarakat','Area Hutan Masyarakat','poly','#ef7d33',hm,{fo:.65});
+
+/* Sosial dan Infrastruktur */
+add('pmk','Sosial dan Infrastruktur','Permukiman','pt','#d9485a',desa.map(d=>F('Permukiman '+d.n,[['Desa',d.n],['Jumlah penduduk',fmt(R(600,2100))],['Jumlah KK',fmt(R(150,550))],['Fasilitas','Sekolah, balai desa']],[d.la+.012,d.lo-.012],d)),{r:5});
+const jl=[];
+desa.forEach(d=>[1,4].forEach(s=>{const e=desa[d.i+s];if(e&&(s==4||d.i%4<3)){const g=[[d.la,d.lo],[(d.la+e.la)/2+R(-.01,.01),(d.lo+e.lo)/2+R(-.01,.01)],[e.la,e.lo]];jl.push(F('Jalan Contoh '+(jl.length+1),[['Jenis',s==4?'Jalan poros':'Jalan desa'],['Kondisi',pick(['Baik','Sedang','Rusak ringan'])],['Menghubungkan',d.n+' – '+e.n],['Panjang (km)',km(g).toFixed(1)]],g,d))}}));
+add('jl','Sosial dan Infrastruktur','Jalan','line','#6b5a46',jl,{w:3});
+add('sg','Sosial dan Infrastruktur','Sungai','line','#2f7de1',[0,1].map(k=>{const g=Array.from({length:12},(_,j)=>[LA0+(k?.18:.34)+Math.sin(j/2+k*2)*.03,LO0-.02+j*(LO1-LO0+.04)/11]);return F('Sungai Contoh '+(k+1),[['Panjang (km)',km(g).toFixed(1)],['Lebar rata-rata (m)',k?18:35],['Status','Mengalir sepanjang tahun']],g)}),{w:4});
+
+/* Pertanian dan Agroforestri */
+add('kb','Pertanian dan Agroforestri','Kebun Agroforestri','poly','#c98a1b',desa.map(d=>{const v=R(12,60);return F('Kebun Agroforestri '+(d.i+1),[['Desa',d.n],['Komoditas',pick(['Karet, Kopi','Durian, Cempedak','Lada, Kakao','Tengkawang, Karet'])],['Luas (ha)',v.toFixed(1)],['Petani',Math.round(R(15,80))]],blob(d.la+R(-.03,.03),d.lo+R(-.035,.035),.012,8),d,v)}));
+
+/* NKT / HCV */
+const NK_N=['Keanekaragaman hayati','Lanskap & dinamika alami','Ekosistem langka','Jasa lingkungan','Kebutuhan dasar masyarakat','Identitas budaya'],NK_C=['#2f7de1','#1b8a5a','#7b5bd6','#13a3a8','#ef7d33','#8a5a2b'],NKC=[12,18,10,8,6,4];
+NKC.forEach((n,k)=>add('nkt'+k,'NKT / HCV','NKT '+(k+1)+' – '+NK_N[k],'pt',NK_C[k],Array.from({length:n},(_,j)=>{const d=pick(desa),cd='NKT'+(k+1)+'-'+pad(j+1);return F(cd,[['Kode',cd],['Kategori','NKT '+(k+1)+' – '+NK_N[k]],['Desa',d.n],['Kecamatan',d.kec],['Status','Teridentifikasi']],jit(d,.05),d)}),{r:5}));
+
+/* Biodiversitas */
+[['bf','Sebaran Fauna',['Enggang','Owa','Orangutan','Rusa sambar','Landak','Kancil'],'#7b5bd6','BF'],['bl','Sebaran Flora',['Tengkawang','Meranti','Ulin','Durian lokal','Keruing','Rotan'],'#2e9e66','BL']].forEach(([id,n,sp,c,px])=>add(id,'Biodiversitas',n,'pt',c,Array.from({length:14},(_,j)=>{const d=pick(desa),cd=px+'-'+pad(j+1);return F(cd,[['Kode',cd],['Jenis',pick(sp)],['Status',pick(['Dilindungi','Umum'])],['Desa',d.n],['Tanggal',(5+j)+' Mei 2026']],jit(d,.05),d)}),{r:5}));
+
+/* Ancaman */
+add('anc','Ancaman','Titik Ancaman','pt','#e02f44',Array.from({length:16},(_,j)=>{const d=pick(desa),cd='AN-'+pad(j+1);return F(cd,[['Kode',cd],['Jenis',pick(['Pembukaan lahan','Perambahan','Titik api','Penebangan liar'])],['Tingkat',pick(['Rendah','Sedang','Tinggi'])],['Desa',d.n],['Dilaporkan',(2+j)+' Mei 2026']],jit(d,.05),d)}),{r:6});
+
+/* Monitoring dan Patroli */
+add('ptr','Monitoring dan Patroli','Jalur Patroli','line','#7b5bd6',desa.slice(0,9).map(d=>{const g=Array.from({length:9},(_,j)=>[d.la+Math.sin(j*.8)*.03+R(-.004,.004),d.lo-.04+j*.01]);return F('Jalur Patroli '+(d.i+1),[['Desa',d.n],['Panjang (km)',km(g).toFixed(1)],['Frekuensi','2x per bulan'],['Tim','Tim Patroli Masyarakat '+(d.i+1)],['Patroli terakhir','Mei 2026']],g,d)}),{w:3,da:'6 5'});
+
+/* Lokasi Program */
+add('dm','Lokasi Program','Demplot','pt','#f0a81f',Array.from({length:9},(_,j)=>{const d=desa[j],cd='DP-'+pad(j+1);return F('Demplot Contoh '+(j+1),[['Kode',cd],['Jenis',pick(['Agroforestri','Persemaian','Tanaman pangan'])],['Desa',d.n],['Luas (ha)',R(1,6).toFixed(1)],['Kelompok tani','Kelompok Tani Contoh '+(j+1)],['Tahun',d.th]],jit(d,.04),d)}),{r:7});
+
+/* Verifikasi Lapangan */
+add('tv','Verifikasi Lapangan','Titik Verifikasi','pt','#1f2a44',tv,{on:1,r:7});
+
+/* ========== PETA ========== */
+const map=L.map('map',{zoomControl:false,preferCanvas:true}),BND=L.latLngBounds(bb(all,.03));
 L.control.zoom({position:'topleft'}).addTo(map);
-L.control.scale({imperial:false}).addTo(map);
-const base={jalan:L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}),
- sat:L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Esri'})};
-let cur=base.jalan.addTo(map);
-bm.onchange=e=>{map.removeLayer(cur);if(e.target.value!=='none')cur=base[e.target.value].addTo(map)};
-const G={desa:L.layerGroup().addTo(map),hcs:L.layerGroup().addTo(map),hm:L.layerGroup(),titik:L.layerGroup().addTo(map)};
-desa.forEach(d=>L.polygon(d.p,{color:'#111',weight:2,dashArray:'6 4',fillColor:'#fff',fillOpacity:.08}).addTo(G.desa).on('click',()=>show('desa',d)));
-hcs.forEach(h=>{h.l=L.polygon(h.p,{color:'#000',weight:1,fillColor:h.k.c,fillOpacity:.75}).addTo(G.hcs).on('click',()=>show('hcs',h))});
-hm.forEach(h=>L.polygon(h.p,{color:'#111',weight:2,fillColor:'#fff',fillOpacity:.6}).addTo(G.hm).on('click',()=>show('hm',h)));
-titik.forEach(t=>L.circleMarker(t.ll,{radius:6,color:'#fff',weight:2,fillColor:'#111',fillOpacity:1}).addTo(G.titik).bindTooltip(t.id).on('click',()=>show('titik',t)));
+L.control.scale({imperial:false,position:'bottomright'}).addTo(map);
+map.fitBounds(BND);
+const BU={terang:['https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png','© OpenStreetMap, © CARTO'],jalan:['https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png','© OpenStreetMap'],sat:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}','Esri']};
+let cur;
+function setBase(k){cur&&map.removeLayer(cur);cur=k=='none'?0:L.tileLayer(BU[k][0],{maxZoom:18,attribution:BU[k][1]}).addTo(map)}
+setBase('terang');$('bm').onchange=e=>setBase(e.target.value);
 
-/* ============ PANEL DETAIL ============ */
-let sel=null;
+/* layer dibuat hanya saat dinyalakan (ringan) */
+function mk(l){const g=L.layerGroup();l.fs.forEach(f=>{let o;
+ if(l.t=='pt')o=L.circleMarker(f.g,{radius:l.r||6,color:'#fff',weight:2,fillColor:l.c,fillOpacity:1}).bindTooltip(f.t);
+ else if(l.t=='line')o=L.polyline(f.g,{color:l.c,weight:l.w||3,dashArray:l.da});
+ else o=L.polygon(f.g,{color:'#fff',weight:1,fillColor:l.c,fillOpacity:l.fo||.7,...l.st});
+ if(!(l.st&&l.st.interactive===false))o.on('click',()=>show(f));
+ o.addTo(g)});return g}
+function tog(id,on){const l=LI[id];
+ if(on){l.lg=l.lg||mk(l);l.lg.addTo(map);l.lg.eachLayer(o=>{if(l.t=='pt')o.bringToFront();else if(l.back)o.bringToBack()})}
+ else l.lg&&map.removeLayer(l.lg)}
+
+/* ========== PANEL LAYER ========== */
+const FLD=['NKT / HCV','Biodiversitas','Ancaman','Monitoring dan Patroli','Lokasi Program','Verifikasi Lapangan'],GR=new Map();
+LY.forEach(l=>{GR.has(l.g)||GR.set(l.g,[]);GR.get(l.g).push(l)});
+let hS='',hF='';
+GR.forEach((ls,g)=>{const h=`<details${/^(Administrasi|HCS|NKT)/.test(g)?' open':''}><summary>${g}</summary>`+ls.map(l=>`<div class="row"><label><input type="checkbox" data-id="${l.id}"${l.on?' checked':''}><span class="sw" style="background:${l.c};${l.t=='pt'?'border-radius:50%;':l.t=='line'?'height:4px;':''}"></span>${l.n}</label><em>${l.fs.length}</em></div>`).join('')+(g=='HCS'?'<div class="op">Opasitas <input type="range" min="10" max="100" value="70" id="opH"></div>':'')+'</details>';FLD.includes(g)?hF+=h:hS+=h});
+$('sp').innerHTML=hS;$('lp').innerHTML=hF;
+$('side').onchange=e=>{const c=e.target;if(c.dataset.id)tog(c.dataset.id,c.checked)};
+$('opH').oninput=e=>{const v=e.target.value/100;HC.forEach(c=>{const l=LI['h_'+c[0]];l.fo=v;l.lg&&l.lg.eachLayer(o=>o.setStyle({fillOpacity:v}))})};
+$('seg').onclick=e=>{const b=e.target.closest('button');if(!b)return;[...$('seg').children].forEach(x=>x.classList.toggle('on',x==b));$('sp').classList.toggle('on',b.dataset.p=='sp');$('lp').classList.toggle('on',b.dataset.p=='lp')};
+$('bBurger').onclick=()=>$('side').classList.add('open');$('sideX').onclick=()=>$('side').classList.remove('open');
+
+/* ========== PANEL DETAIL ========== */
 const tbl=r=>'<table class="dt">'+r.map(a=>`<tr><td>${a[0]}</td><td>${a[1]}</td></tr>`).join('')+'</table>';
-const photos=['Hutan Tembawang','Patroli Masyarakat','Flora Penting','Fauna','Agroforestri','Demplot'];
-const ph=photos.map(p=>`<div><i></i>${p}</div>`).join('');
-phA.innerHTML=ph;phB.innerHTML=ph;
-function show(type,o,open=true){
-  sel={type,o};const ds=type==='desa'?o:o.d;let t,r;
-  if(type==='hm'){t=o.nama;r=[['Nama Lokasi',o.nama],['Desa',ds.n],['Kecamatan',ds.kec],['Kabupaten','Harapan Jaya'],['Kategori','Hutan Adat / Rimba'],['Luas (ha)',o.ha.toFixed(2)],['Status Kawasan','APL'],['Kategori HCS',o.k.n],['NKT','NKT 1, 2, 3'],['Jenis Penting','Tengkawang, Durian, Meranti'],['Ancaman','Pembukaan lahan'],['Hasil Verifikasi',ds.nt+' titik (Mei 2026)'],['Sumber Data','Survei lapangan (contoh)']]}
-  if(type==='desa'){t=o.n;r=[['Desa',o.n],['Kecamatan',o.kec],['Kabupaten','Harapan Jaya'],['Luas (ha)',fmt(o.ha)],['Jumlah Titik',o.nt]]}
-  if(type==='hcs'){t='Area '+o.k.s;r=[['Kelas HCS',o.k.n],['Desa',ds.n],['Kecamatan',ds.kec],['Luas (ha)',o.ha.toFixed(2)]]}
-  if(type==='titik'){t=o.id;r=[['Kode Titik',o.id],['Desa',ds.n],['Tanggal',o.tgl],['Petugas',o.pt],['Koordinat',o.ll[0].toFixed(5)+', '+o.ll[1].toFixed(5)]]}
-  dTitle.textContent=t;pi.innerHTML=tbl(r);
-  pd.innerHTML=tbl(titik.filter(x=>x.d===ds).map(x=>[x.id,x.tgl]));
-  if(open)detail.classList.add('open');
-}
-dX.onclick=()=>detail.classList.remove('open');
-bP.onclick=()=>window.print();
-bZ.onclick=()=>{if(!sel)return;const o=sel.o;sel.type==='titik'?map.setView(o.ll,14):map.fitBounds(L.polygon(o.p).getBounds().pad(.3));detail.classList.remove('open')};
-tabs.onclick=e=>{const b=e.target.closest('button');if(!b)return;[...tabs.children].forEach(x=>x.classList.toggle('on',x===b));['pi','pf','pd','pk'].forEach(i=>document.getElementById(i).classList.toggle('on',i===b.dataset.p))};
+const PH=['Hutan Tembawang','Patroli Masyarakat','Flora Penting','Fauna','Agroforestri','Demplot'].map(p=>`<div><i></i>${p}</div>`).join('');
+$('phA').innerHTML=PH;$('phB').innerHTML=PH;
+let sel;
+function show(f,open=true){sel=f;const d=f.d;
+ $('dTitle').textContent=f.t;$('pi').innerHTML=tbl(f.r);
+ $('pd').innerHTML='<p class="note" style="padding:0 0 6px">Titik verifikasi'+(d?' – '+d.n:'')+'</p>'+tbl(tv.filter(x=>!d||x.d==d).slice(0,10).map(x=>[x.t,x.r[3][1]+' · '+x.r[4][1]]));
+ $('pk').innerHTML='<ul class="doc">'+[[f.t+' – Laporan verifikasi','PDF','1,2 MB'],['Peta tematik '+(d?d.n:'wilayah program'),'PDF','3,4 MB'],['Data survei lapangan','XLSX','420 KB']].map(a=>`<li><span>${a[0]}</span><b class="ext">${a[1]}</b><small>${a[2]}</small></li>`).join('')+'</ul>';
+ if(open)$('detail').classList.add('open')}
+const goTo=f=>typeof f.g[0]=='number'?map.setView(f.g,14):map.fitBounds(f.g,{padding:[30,30]});
+$('dX').onclick=()=>$('detail').classList.remove('open');
+$('bP').onclick=()=>window.print();
+$('bZ').onclick=()=>{if(sel){goTo(sel);$('detail').classList.remove('open')}};
+$('tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;[...$('tabs').children].forEach(x=>x.classList.toggle('on',x==b));['pi','pf','pd','pk'].forEach(i=>$(i).classList.toggle('on',i==b.dataset.p))};
+$('allPh').onclick=e=>{e.preventDefault();$('tabs').children[1].click()};
 
-/* ============ PANEL LAYER ============ */
-bBurger.onclick=()=>side.classList.add('open');sideX.onclick=()=>side.classList.remove('open');
-seg.onclick=e=>{const b=e.target.closest('button');if(!b)return;[...seg.children].forEach(x=>x.classList.toggle('on',x===b));sp.classList.toggle('on',b.dataset.p==='sp');lp.classList.toggle('on',b.dataset.p==='lp')};
-document.querySelectorAll('[data-l]').forEach(c=>c.onchange=()=>c.checked?G[c.dataset.l].addTo(map):map.removeLayer(G[c.dataset.l]));
-const on={};kls.innerHTML=KELAS.map(k=>{on[k.k]=1;return`<div class="row"><label><input type="checkbox" data-k="${k.k}" checked><span class="sw" style="background:${k.c}"></span>${k.n}</label></div>`}).join('');
-kls.onchange=e=>{on[e.target.dataset.k]=e.target.checked;hcs.forEach(h=>on[h.k.k]?G.hcs.addLayer(h.l):G.hcs.removeLayer(h.l))};
-opH.oninput=()=>G.hcs.eachLayer(l=>l.setStyle({fillOpacity:opH.value/100}));
-stub.innerHTML=['NKT / HCV','Biodiversitas','Sosial dan Infrastruktur','Pertanian dan Agroforestri','Ancaman','Monitoring dan Patroli','Lokasi Program'].map(t=>`<details><summary>${t}</summary><p class="note">Data belum tersedia.</p></details>`).join('');
-nT.textContent=titik.length+' titik tercatat.';
+/* ========== PENCARIAN ========== */
+const IDX=LY.filter(l=>!/^(h_|nkt)/.test(l.id)).flatMap(l=>l.fs.map(f=>({f,l})));
+function cari(v){v=v.toLowerCase().trim();const o=$('res');o.innerHTML='';if(!v){o.style.display='none';return}
+ const it=IDX.filter(x=>x.f.t.toLowerCase().includes(v)).slice(0,8);
+ it.forEach(x=>{const e=document.createElement('div');e.innerHTML=`<span>${x.f.t}</span><small>${x.l.n}</small>`;
+  e.onclick=()=>{const c=document.querySelector(`[data-id="${x.l.id}"]`);if(c&&!c.checked){c.checked=true;tog(x.l.id,1)}goTo(x.f);show(x.f);o.style.display='none';$('q').value=''};o.appendChild(e)});
+ o.style.display=it.length?'block':'none'}
+$('q').oninput=e=>cari(e.target.value);
+$('hs').onkeydown=e=>{if(e.key=='Enter'){$('q').value=e.target.value;cari(e.target.value);$('q').focus()}};
 
-/* pencarian */
-function cari(inp,out){const v=inp.value.toLowerCase().trim();out.innerHTML='';if(!v){out.style.display='none';return}
-  const it=[...desa.map(d=>({t:d.n,f:()=>{map.fitBounds(L.polygon(d.p).getBounds().pad(.3));show('desa',d)}})),...hm.map(h=>({t:h.nama,f:()=>{map.fitBounds(L.polygon(h.p).getBounds().pad(.5));show('hm',h)}})),...titik.map(t=>({t:t.id+' – '+t.d.n,f:()=>{map.setView(t.ll,14);show('titik',t)}}))].filter(i=>i.t.toLowerCase().includes(v)).slice(0,8);
-  it.forEach(i=>{const d=document.createElement('div');d.textContent=i.t;d.onclick=()=>{i.f();out.style.display='none';inp.value=''};out.appendChild(d)});out.style.display=it.length?'block':'none'}
-q.oninput=()=>cari(q,res);
-hs.onkeydown=e=>{if(e.key==='Enter'){q.value=hs.value;cari(q,res);q.focus()}};
+/* ========== STATISTIK & GRAFIK ========== */
+const hmHa=hm.reduce((s,f)=>s+f.v,0);
+$('stats').innerHTML=[['▲','#1b8a5a','Luas Hutan Dilindungi & Teridentifikasi',fmt(TOT_H)+' <em>ha</em>'],['⌂','#ef7d33','Lokasi Program',desa.length+' <em>desa</em>'],['☺','#2f7de1','Petani Terlibat',fmt(TOT_P)+' <em>petani</em>'],['◉','#7b5bd6','Titik Verifikasi',tv.length+' <em>titik</em>'],['✿','#c98a1b','Luas Hutan Masyarakat',fmt(hmHa)+' <em>ha</em>']].map(a=>`<div class="card stat"><div class="ic" style="background:${a[1]}">${a[0]}</div><div><small>${a[2]}</small><b>${a[3]}</b></div></div>`).join('');
 
-/* ============ STATISTIK & GRAFIK ============ */
-const hut=hcs.reduce((s,h)=>s+h.ha,0),hmHa=hm.reduce((s,h)=>s+h.ha,0),totDesa=desa.reduce((s,d)=>s+d.ha,0);
-stats.innerHTML=[['▲','Luas Hutan Tersisa',hut.toFixed(2)+' ha'],['⌂','Desa',desa.length+' desa'],['☺','Penerima Manfaat','500 petani'],['◉','Titik Verifikasi',titik.length+' titik'],['✿','Lokasi Hutan Masyarakat',hmHa.toFixed(0)+' ha']].map(a=>`<div class="card stat"><div class="ic">${a[0]}</div><div><small>${a[1]}</small><b>${a[2]}</b></div></div>`).join('');
-const TL=[['Hutan',58.4,'#111'],['Perkebunan',25.1,'#555'],['Lahan Terbuka',10.3,'#888'],['Pertanian',4.2,'#bbb'],['Permukiman',2.0,'#ddd']];
-let acc=0;donut.style.background='conic-gradient('+TL.map(t=>{const s=acc;acc+=t[1];return`${t[2]} ${s}% ${acc}%`}).join(',')+')';
-dleg.innerHTML=TL.map(t=>`<p><i style="background:${t[2]};border:1px solid #999"></i>${t[0]}<span>${t[1].toString().replace('.',',')}% (${fmt(t[1]*totDesa*6/100)} ha)</span></p>`).join('');
-const ks=KELAS.map(k=>({k,v:hcs.filter(h=>h.k===k).reduce((s,h)=>s+h.ha,0)})),mx=Math.max(...ks.map(a=>a.v))||1;
-vb.innerHTML=ks.map(a=>`<div>${(a.v/hut*100).toFixed(1)}%<i style="height:${a.v/mx*100}px;background:${a.k.c};border:1px solid #111"></i></div>`).join('');
-vl.innerHTML=ks.map(a=>`<span>${a.k.s}</span>`).join('');
-const NK=[12,18,10,8,6,4];nkt.innerHTML=NK.map((v,i)=>`<div class="hb"><span>NKT ${i+1}</span><i style="width:${v/18*100}%"></i><span>${v} titik</span></div>`).join('');
+$('yrs').innerHTML=[[2023,6,'#1b8a5a,#2fb37a'],[2024,2,'#1b8a5a,#2fb37a'],[2025,13,'#f0a81f,#2fb37a'],[2026,0]].map(y=>`<div class="yr"><span>${y[0]}</span><div class="trk"><div class="fil" style="width:${y[1]?Math.max(y[1]/13*100,24):100}%;${y[1]?`background:linear-gradient(90deg,${y[2]})`:'color:#7d8b84'}">${y[1]?y[1]+' desa':'Belum ada desa'}</div></div></div>`).join('');
 
-/* ============ ALAT PETA ============ */
-bHome.onclick=()=>map.setView([-0.32,110.5],10);
-bFs.onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
-map.on('mousemove',e=>cbar.textContent=`Koordinat: ${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`);
-let ms=false,pts=[];const ml=L.polyline([],{color:'#111',weight:3,dashArray:'2 6'}).addTo(map);
-bMs.onclick=()=>{ms=!ms;bMs.classList.toggle('on',ms);pts=[];ml.setLatLngs([]);cbar.textContent=ms?'Ketuk peta untuk mengukur jarak':'Koordinat: –'};
-map.on('click',e=>{if(!ms)return;pts.push(e.latlng);ml.setLatLngs(pts);let d=0;for(let i=1;i<pts.length;i++)d+=pts[i-1].distanceTo(pts[i]);cbar.textContent='Jarak: '+(d/1000).toFixed(2)+' km'});
+const TL=[['Hutan',58.4,'#0d5c3a'],['Perkebunan',25.1,'#f0a81f'],['Lahan Terbuka',10.3,'#ef7d33'],['Pertanian',4.2,'#2f7de1'],['Permukiman',2,'#d9485a']];
+let ac=0;$('donut').style.background='conic-gradient('+TL.map(t=>{const s=ac;ac+=t[1];return`${t[2]} ${s}% ${ac}%`}).join(',')+')';
+$('dleg').innerHTML=TL.map(t=>`<p><i style="background:${t[2]}"></i>${t[0]}<span>${String(t[1]).replace('.',',')}% (${fmt(WIL*t[1]/100)} ha)</span></p>`).join('');
+
+const ks=HC.slice(0,4).map(c=>({c,v:hf[c[0]].reduce((s,f)=>s+f.v,0)})),mxv=Math.max(...ks.map(a=>a.v));
+$('vb').innerHTML=ks.map(a=>`<div>${(a.v/TOT_H*100).toFixed(1)}%<i style="height:${a.v/mxv*100}px;background:${a.c[3]}"></i></div>`).join('');
+$('vl').innerHTML=ks.map(a=>`<span>${a.c[2]}</span>`).join('');
+$('nkt').innerHTML=NKC.map((v,i)=>`<div class="hb"><span>NKT ${i+1}</span><i style="width:${v/18*100}%;background:${NK_C[i]}"></i><span>${v} titik</span></div>`).join('');
+
+/* ========== ALAT PETA ========== */
+$('bHome').onclick=()=>map.fitBounds(BND);
+$('bFs').onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
+let ms=false,pts=[],mv;
+const ml=L.polyline([],{color:'#f0a81f',weight:3,dashArray:'2 6'}).addTo(map);
+map.on('mousemove',e=>{if(mv||ms)return;mv=requestAnimationFrame(()=>{mv=0;$('cbar').textContent=`Koordinat: ${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`})});
+$('bMs').onclick=()=>{ms=!ms;$('bMs').classList.toggle('on',ms);pts=[];ml.setLatLngs([]);$('cbar').textContent=ms?'Ketuk peta untuk mengukur jarak':'Koordinat: –'};
+map.on('click',e=>{if(!ms)return;pts.push(e.latlng);ml.setLatLngs(pts);$('cbar').textContent='Jarak: '+km(pts.map(p=>[p.lat,p.lng])).toFixed(2)+' km'});
 addEventListener('resize',()=>map.invalidateSize());
 
-show('hm',hm[0],false);
+/* ========== MULAI ========== */
+LY.filter(l=>l.on).forEach(l=>tog(l.id,1));
+show(hm[0],false);
 </script>
 </body>
 </html>
