@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4F WebGIS – Petani Pelindung Hutan</title>
+<style>
+:root{--bg:#fff;--soft:#f3f3f3;--line:#d4d4d4;--mid:#8a8a8a;--ink:#111;--r:6px}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font:13px/1.4 "Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);display:flex;flex-direction:column;overflow:hidden}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:var(--r);padding:7px 12px}
+button:hover{background:var(--soft)}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+button.solid{background:var(--ink);color:#fff;border-color:var(--ink)}
+/* top bar */
+header{height:56px;display:flex;align-items:center;gap:20px;padding:0 16px;border-bottom:1px solid var(--line);flex:none}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:34px;height:34px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:700}
+.brand b{font-size:20px;letter-spacing:1px}
+.brand small{display:block;font-size:11px;line-height:1.2}
+nav{display:flex;gap:4px}
+nav a{padding:7px 12px;border-radius:var(--r);color:var(--ink);text-decoration:none}
+nav a.on{background:var(--ink);color:#fff}
+.sp{flex:1}
+.gsearch{width:260px;padding:8px 12px;border:1px solid var(--line);border-radius:var(--r);font:inherit}
+.bell{position:relative;width:32px;height:32px;display:grid;place-items:center}
+.bell i{position:absolute;top:-2px;right:-2px;background:var(--ink);color:#fff;border-radius:50%;width:16px;height:16px;font:700 10px/16px sans-serif;text-align:center}
+.user{display:flex;align-items:center;gap:8px}
+.av{width:32px;height:32px;border-radius:50%;background:var(--mid)}
+/* layout */
+main{flex:1;min-height:0;display:grid;grid-template-columns:240px 1fr 340px}
+aside{overflow:auto;padding:14px}
+.left{border-right:1px solid var(--line)}
+.right{border-left:1px solid var(--line)}
+h2{font-size:17px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.seg{display:flex;border:1px solid var(--ink);border-radius:var(--r);overflow:hidden;margin-bottom:12px}
+.seg button{flex:1;border:0;border-radius:0}
+.seg button.on,.tabs button.on{background:var(--ink);color:#fff}
+details{border-bottom:1px solid var(--line);padding:8px 0}
+summary{cursor:pointer;font-weight:600;font-size:14px;list-style:none;display:flex;justify-content:space-between}
+summary::after{content:"+";color:var(--mid)}
+details[open]>summary::after{content:"–"}
+details label{display:flex;align-items:center;gap:8px;padding:5px 0 0 4px}
+input[type=checkbox]{accent-color:#111;width:15px;height:15px}
+/* center */
+.center{display:flex;flex-direction:column;min-height:0;overflow:auto;background:var(--soft)}
+.map{position:relative;flex:none;height:420px;background:#4a4a4a;overflow:hidden}
+.map svg.bg{position:absolute;inset:0;width:100%;height:100%}
+.msearch{position:absolute;top:14px;left:14px;width:250px;padding:9px 12px;border:1px solid var(--line);border-radius:var(--r);font:inherit}
+.tools{position:absolute;top:14px;right:14px;display:flex;gap:6px}
+.tools button{background:#fff}
+.zoom{position:absolute;top:60px;left:14px;display:flex;flex-direction:column;gap:6px}
+.zoom button{width:34px;height:34px;padding:0;background:#fff;font-size:16px}
+.pin{position:absolute;width:30px;height:30px;border-radius:50%;background:#fff;border:2px solid var(--ink);display:grid;place-items:center;font-size:11px;font-weight:700;transform:translate(-50%,-50%);padding:0}
+.pin.d{background:var(--ink);color:#fff;border-color:#fff}
+.lbl{position:absolute;color:#fff;font-weight:600;text-shadow:0 1px 3px #000;transform:translate(-50%,-50%)}
+.mini{position:absolute;right:14px;bottom:14px;width:150px;height:110px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:6px;font-size:10px;text-align:center}
+.mini div{height:78px;background:var(--soft);border:1px solid var(--line);position:relative}
+.mini div::after{content:"";position:absolute;left:35%;top:25%;width:30%;height:45%;border:2px solid var(--ink)}
+.scale{position:absolute;left:14px;bottom:12px;color:#fff;font-size:11px}
+.scale i{display:block;width:90px;height:5px;border:1px solid #fff;border-top:0;margin-bottom:2px}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:12px 12px 0}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:12px}
+.stat{display:flex;gap:10px;align-items:center}
+.ic{width:42px;height:42px;border-radius:var(--r);background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:700}
+.stat small{display:block;color:var(--mid);font-size:11px}
+.stat b{font-size:22px}
+.charts{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:10px;padding:12px}
+.charts h3{font-size:14px;margin-bottom:10px}
+.donut-w{display:flex;gap:14px;align-items:center}
+.donut{width:120px;height:120px;border-radius:50%;flex:none;background:conic-gradient(#111 0 58.4%,#555 0 83.5%,#888 0 93.8%,#bbb 0 98%,#ddd 0 100%);-webkit-mask:radial-gradient(circle 36px,transparent 98%,#000 100%);mask:radial-gradient(circle 36px,transparent 98%,#000 100%)}
+.leg{flex:1;font-size:11px}
+.leg p{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.leg i{width:10px;height:10px;flex:none}
+.leg span{margin-left:auto;color:var(--mid)}
+.bars{display:flex;align-items:flex-end;gap:14px;height:130px;padding-top:6px;border-bottom:1px solid var(--line)}
+.bars div{flex:1;text-align:center;font-size:11px;display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.bars i{display:block;background:var(--ink);margin-top:4px}
+.bl{display:flex;gap:14px;font-size:10px;text-align:center;color:var(--mid);margin-top:4px}
+.bl span{flex:1}
+.hb{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:12px}
+.hb em{width:40px;font-style:normal}
+.hb i{display:block;height:12px;background:var(--ink)}
+.hb span{color:var(--mid);font-size:11px}
+/* right */
+.tabs{display:flex;gap:4px;margin:10px 0}
+.tabs button{flex:1;padding:6px 4px;font-size:12px}
+.hero{height:140px;border-radius:var(--r);background:linear-gradient(135deg,#bbb,#555);margin-bottom:8px;display:grid;place-items:center;color:#fff}
+table{width:100%;border-collapse:collapse;margin-bottom:12px}
+td{padding:5px 0;vertical-align:top;font-size:12.5px}
+td:first-child{color:var(--mid);width:42%}
+.btns{display:flex;gap:8px}
+.btns button{flex:1}
+.ph{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.ph div{font-size:10px}
+.ph i{display:block;aspect-ratio:1;background:linear-gradient(135deg,#ccc,#777);border-radius:4px;margin-bottom:3px}
+.ph-h{display:flex;justify-content:space-between;margin-top:18px;font-weight:600;font-size:14px}
+.ph-h a{font-weight:400;font-size:12px;color:var(--ink)}
+.pane{display:none}.pane.on{display:block}
+@media(max-width:1100px){main{grid-template-columns:200px 1fr}.right{display:none}}
+@media(max-width:760px){main{grid-template-columns:1fr;overflow:auto}.left{display:none}nav,.gsearch{display:none}.stats,.charts{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">4F</div><div><b>4F</b></div><small>Petani Pelindung Hutan<br>Farmers for Forest Protection</small></div>
+  <nav>
+    <a href="#">Beranda</a><a href="#" class="on">Peta</a><a href="#">Data</a><a href="#">Monitoring</a><a href="#">Kegiatan</a><a href="#">Laporan</a><a href="#">Tentang</a>
+  </nav>
+  <div class="sp"></div>
+  <input class="gsearch" placeholder="Cari desa, lokasi, atau layer..." aria-label="Cari">
+  <div class="bell">🔔<i>3</i></div>
+  <div class="user"><div class="av"></div>Admin 4F ▾</div>
+</header>
+
+<main>
+  <aside class="left">
+    <h2>Layer Peta <button style="border:0;padding:0 4px">✕</button></h2>
+    <div class="seg" id="lseg"><button class="on">Data Spasial</button><button>Data Lapangan</button></div>
+    <details open><summary>Administrasi</summary>
+      <label><input type="checkbox" checked> Batas Kabupaten</label>
+      <label><input type="checkbox" checked> Batas Kecamatan</label>
+      <label><input type="checkbox" checked> Batas Desa</label>
+      <label><input type="checkbox"> Batas Dusun</label></details>
+    <details open><summary>Tutupan Lahan</summary>
+      <label><input type="checkbox" checked> Tutupan Lahan 2024</label>
+      <label><input type="checkbox"> Tutupan Lahan 2020</label></details>
+    <details open><summary>HCS</summary>
+      <label><input type="checkbox" checked> Regenerasi Muda (DN 2)</label>
+      <label><input type="checkbox" checked> Low Density Forest (DN 3)</label>
+      <label><input type="checkbox" checked> Medium Density Forest (DN 4)</label>
+      <label><input type="checkbox" checked> High Density Forest (DN 5)</label>
+      <label><input type="checkbox"> Lahan Terbuka (DN 0)</label>
+      <label><input type="checkbox"> Perkebunan (DN 10)</label>
+      <label><input type="checkbox"> Permukiman (DN 50)</label></details>
+    <details><summary>NKT / HCV</summary><label><input type="checkbox"> NKT 1–6</label></details>
+    <details><summary>Hutan Masyarakat</summary><label><input type="checkbox"> Batas hutan adat</label></details>
+    <details><summary>Biodiversitas</summary><label><input type="checkbox"> Sebaran spesies</label></details>
+    <details><summary>Sosial dan Infrastruktur</summary><label><input type="checkbox"> Jalan &amp; permukiman</label></details>
+    <details><summary>Pertanian dan Agroforestri</summary><label><input type="checkbox"> Kebun agroforestri</label></details>
+    <details><summary>Ancaman</summary><label><input type="checkbox"> Titik api</label></details>
+    <details><summary>Monitoring dan Patroli</summary><label><input type="checkbox"> Jalur patroli</label></details>
+    <details><summary>Lokasi Program</summary><label><input type="checkbox"> Demplot</label></details>
+  </aside>
+
+  <section class="center">
+    <div class="map" role="img" aria-label="Peta Kabupaten Sanggau">
+      <svg class="bg" viewBox="0 0 800 420" preserveAspectRatio="none">
+        <rect width="800" height="420" fill="#4d4d4d"/>
+        <g opacity=".9">
+          <path d="M60 80 L230 40 L330 90 L300 190 L180 220 L70 170Z" fill="#6a6a6a"/>
+          <path d="M330 90 L520 60 L620 150 L560 260 L400 280 L300 190Z" fill="#8a8a8a"/>
+          <path d="M180 220 L300 190 L400 280 L360 390 L200 380 L110 300Z" fill="#9a9a9a"/>
+          <path d="M560 260 L620 150 L760 190 L770 330 L640 380Z" fill="#5c5c5c"/>
+          <path d="M400 280 L560 260 L640 380 L520 410 L360 390Z" fill="#777"/>
+        </g>
+        <path d="M0 300 C120 260 200 330 300 250 S480 200 560 150 S700 90 800 110" stroke="#fff" stroke-width="3" fill="none" opacity=".85"/>
+        <path d="M300 250 C330 330 380 340 430 420" stroke="#fff" stroke-width="2" fill="none" opacity=".6"/>
+      </svg>
+      <input class="msearch" value="Kabupaten Sanggau" aria-label="Cari lokasi">
+      <div class="zoom"><button>+</button><button>−</button><button>⌂</button><button>◎</button></div>
+      <div class="tools"><button>🗺 Basemap ▾</button><button>≣</button><button>✎</button><button>⎙</button><button>⤢</button></div>
+      <span class="lbl" style="left:36%;top:25%">Desa Embala</span>
+      <span class="lbl" style="left:40%;top:44%">Desa Mondi</span>
+      <span class="lbl" style="left:66%;top:60%">Desa Setawar</span>
+      <span class="lbl" style="left:44%;top:78%">Desa Tapang Perodah</span>
+      <span class="lbl" style="left:12%;top:55%">Kab. Landak</span>
+      <span class="lbl" style="left:80%;top:30%">Kab. Sekadau</span>
+      <span class="lbl" style="left:84%;top:84%">Kab. Sintang</span>
+      <button class="pin d" style="left:34%;top:12%">▲</button>
+      <button class="pin" style="left:27%;top:23%">F</button>
+      <button class="pin d" style="left:60%;top:20%">▲</button>
+      <button class="pin" style="left:44%;top:35%">◉</button>
+      <button class="pin d" style="left:47%;top:51%">◉</button>
+      <button class="pin" style="left:62%;top:50%">⌂</button>
+      <button class="pin d" style="left:40%;top:67%" aria-label="Rimba Sungai Bala">⌂</button>
+      <button class="pin" style="left:75%;top:55%">♥</button>
+      <div class="mini">Kalimantan Barat<div></div></div>
+      <div class="scale"><i></i>0 &nbsp; 5 &nbsp; 10 &nbsp;&nbsp; 20 km</div>
+    </div>
+
+    <div class="stats">
+      <div class="card stat"><div class="ic">▲</div><div><small>Luas Hutan Tersisa</small><b>324.12 ha</b></div></div>
+      <div class="card stat"><div class="ic">⌂</div><div><small>Desa</small><b>6</b> desa</div></div>
+      <div class="card stat"><div class="ic">☺</div><div><small>Penerima Manfaat</small><b>500</b><br><small>petani/masyarakat</small></div></div>
+      <div class="card stat"><div class="ic">◉</div><div><small>Titik Verifikasi</small><b>28</b> titik</div></div>
+      <div class="card stat"><div class="ic">✿</div><div><small>Lokasi Tembawang</small><b>56</b> ha</div></div>
+    </div>
+
+    <div class="charts">
+      <div class="card"><h3>Tutupan Lahan (Sanggau)</h3>
+        <div class="donut-w"><div class="donut"></div>
+          <div class="leg">
+            <p><i style="background:#111"></i>Hutan<span>58,4% (132.450 ha)</span></p>
+            <p><i style="background:#555"></i>Perkebunan<span>25,1% (56.890 ha)</span></p>
+            <p><i style="background:#888"></i>Lahan Terbuka<span>10,3% (23.340 ha)</span></p>
+            <p><i style="background:#bbb"></i>Pertanian<span>4,2% (9.560 ha)</span></p>
+            <p><i style="background:#ddd;border:1px solid #999"></i>Permukiman<span>2,0% (4.540 ha)</span></p>
+          </div></div></div>
+      <div class="card"><h3>Sebaran HCS</h3>
+        <div class="bars">
+          <div>24.5%<i style="height:100%"></i></div><div>18.7%<i style="height:76%;background:#444"></i></div>
+          <div>12.1%<i style="height:50%;background:#777"></i></div><div>11.3%<i style="height:46%;background:#aaa"></i></div>
+        </div>
+        <div class="bl"><span>Regenerasi Muda (DN 2)</span><span>Low Density (DN 3)</span><span>Medium Density (DN 4)</span><span>High Density (DN 5)</span></div></div>
+      <div class="card"><h3>Sebaran NKT</h3>
+        <div class="hb"><em>NKT 1</em><i style="width:45%"></i><span>12 titik</span></div>
+        <div class="hb"><em>NKT 2</em><i style="width:68%"></i><span>18 titik</span></div>
+        <div class="hb"><em>NKT 3</em><i style="width:38%"></i><span>10 titik</span></div>
+        <div class="hb"><em>NKT 4</em><i style="width:30%"></i><span>8 titik</span></div>
+        <div class="hb"><em>NKT 5</em><i style="width:22%"></i><span>6 titik</span></div>
+        <div class="hb"><em>NKT 6</em><i style="width:15%"></i><span>4 titik</span></div></div>
+    </div>
+  </section>
+
+  <aside class="right">
+    <h2>Rimba Sungai Bala <button style="border:0;padding:0 4px">✕</button></h2>
+    <div class="tabs" id="rtabs">
+      <button class="on" data-p="p1">Informasi</button><button data-p="p2">Foto (6)</button><button data-p="p3">Data Lapangan</button><button data-p="p4">Dokumen</button>
+    </div>
+    <div class="hero">Foto lokasi</div>
+    <div class="pane on" id="p1">
+      <table>
+        <tr><td>Nama Lokasi</td><td>Rimba Sungai Bala</td></tr>
+        <tr><td>Desa</td><td>Tapang Perodah</td></tr>
+        <tr><td>Kecamatan</td><td>Kembayan</td></tr>
+        <tr><td>Kabupaten</td><td>Sanggau</td></tr>
+        <tr><td>Kategori</td><td>Hutan Adat / Rimba</td></tr>
+        <tr><td>Luas (ha)</td><td>421.60</td></tr>
+        <tr><td>Status Kawasan</td><td>APL</td></tr>
+        <tr><td>Kategori HCS</td><td>Low Density Forest (DN 3)</td></tr>
+        <tr><td>NKT</td><td>NKT 1, 2, 3, 4</td></tr>
+        <tr><td>Jenis Penting</td><td>Tengkawang, Durian, Meranti, dll</td></tr>
+        <tr><td>Ancaman</td><td>Pembukaan lahan, perambahan</td></tr>
+        <tr><td>Hasil Verifikasi</td><td>9 titik (18–19 Mei 2026)</td></tr>
+        <tr><td>Sumber Data</td><td>SKT-NKT 4F, Survey Lapangan</td></tr>
+      </table>
+      <div class="btns"><button class="solid">📍 Lihat di Peta</button><button>⬇ Unduh Laporan</button></div>
+    </div>
+    <div class="pane" id="p2"><p style="color:var(--mid)">6 foto lapangan lokasi ini.</p></div>
+    <div class="pane" id="p3"><p style="color:var(--mid)">Data lapangan akan tampil di sini.</p></div>
+    <div class="pane" id="p4"><p style="color:var(--mid)">Belum ada dokumen.</p></div>
+
+    <div class="ph-h">Foto Lapangan Terbaru <a href="#">Lihat Semua</a></div>
+    <div class="ph">
+      <div><i></i>Hutan Tembawang</div><div><i></i>Patroli Masyarakat</div><div><i></i>Flora Penting</div>
+      <div><i></i>Fauna</div><div><i></i>Agroforestri</div><div><i></i>Demplot</div>
+    </div>
+  </aside>
+</main>
+
+<script>
+function tabs(id, cb){
+  const box=document.getElementById(id);
+  box.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    box.querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); if(cb) cb(b);
+  });
+}
+tabs('lseg');
+tabs('rtabs',b=>{
+  document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p));
+});
+</script>
+</body>
+</html>
